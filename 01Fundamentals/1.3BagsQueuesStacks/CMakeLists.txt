@@ -3,3 +3,9 @@ target_link_libraries(bag libUtils)
 
 add_executable(evaluate Evaluate.cpp)
 target_link_libraries(evaluate libUtils)
+
+add_executable(fixedCapacityStackOfStrings FixedCapacityStackOfStrings.cpp)
+target_link_libraries(fixedCapacityStackOfStrings libUtils)
+
+add_executable(fixedCapacityStack FixedCapacityStack.cpp)
+target_link_libraries(fixedCapacityStack libUtils)
