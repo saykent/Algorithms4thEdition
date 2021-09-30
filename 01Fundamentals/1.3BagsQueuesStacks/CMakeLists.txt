@@ -12,3 +12,6 @@ target_link_libraries(fixedCapacityStack libUtils)
 
 add_executable(resizingArrayStack ResizingArrayStack.cpp)
 target_link_libraries(resizingArrayStack libUtils)
+
+add_executable(stack Stack.cpp)
+target_link_libraries(stack libUtils)

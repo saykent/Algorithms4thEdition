@@ -44,7 +44,7 @@ public:
         using pointer = std::conditional_t<Const, const T*, T*>;
         using reference = std::conditional_t<Const, const T&, T&>;
     public:
-        ReverseArrayIterator(pointer p) : ptr_{p}
+        explicit ReverseArrayIterator(pointer p) : ptr_{p}
         {}
 
         reference operator*() const { return *ptr_; }
