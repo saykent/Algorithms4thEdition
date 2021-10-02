@@ -3,7 +3,11 @@
 #include <stack>
 #include <cmath>
 
-
+/**
+ * ( 1 + ( ( 2 + 3 ) * ( 4 * 5 ) ) )  ==> 101.0
+ * ( ( 1 + sqrt ( 5.0 ) ) / 2.0 )  ==> 1.618033988749895
+ * @return
+ */
 int main()
 {
     std::stack<std::string> operators;

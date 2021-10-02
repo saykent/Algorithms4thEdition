@@ -1,3 +1,6 @@
+
+add_subdirectory(exercises)
+
 add_executable(bag bag.cpp)
 target_link_libraries(bag libUtils)
 
@@ -21,3 +24,4 @@ target_link_libraries(queue libUtils)
 
 add_executable(bagLinkedList BagLinkedList.cpp)
 target_link_libraries(bagLinkedList libUtils)
+

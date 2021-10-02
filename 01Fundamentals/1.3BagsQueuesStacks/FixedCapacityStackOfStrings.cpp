@@ -6,7 +6,7 @@
 class FixedCapacityStackOfStrings
 {
 public:
-    FixedCapacityStackOfStrings(int capacity) : size_{0}, array_{new std::string[capacity]}
+    FixedCapacityStackOfStrings(int capacity) : size_{0}, capacity_{capacity}, array_{new std::string[capacity]}
     {
     }
 
@@ -16,12 +16,14 @@ public:
     }
 
     [[nodiscard]] bool isEmpty() const { return size_ == 0; }
+    [[nodiscard]] bool isFull() const { return size_ == capacity_; }
     [[nodiscard]] int size() { return size_; }
     void push(std::string& item) { array_[size_++] = item; }
     std::string& pop() { return array_[--size_]; }
 
 private:
     int size_;
+    int capacity_;
     std::string* array_;
 };
 

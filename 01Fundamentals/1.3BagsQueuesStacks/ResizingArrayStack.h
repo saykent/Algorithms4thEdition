@@ -1,8 +1,6 @@
 #include <iostream>
 #include <array>
 
-#include "StdIn.h"
-
 template<typename T>
 class ResizingArrayStack
 {
@@ -25,8 +23,7 @@ public:
     {
         if (size_ == capacity_)
             resize(2 * capacity_);
-        array_[1 + size_] = item;
-        ++size_;
+        array_[1 + (size_++)] = item;
     }
     T& pop()
     {
@@ -120,30 +117,3 @@ private:
     int capacity_;
     T* array_;
 };
-
-/**
- * string for test: to be or not to - be - - that - - - is
- * result: to be not that or be (2 left on stack)
- * @return
- */
-int main()
-{
-    ResizingArrayStack<std::string> s{};
-
-    while (!StdIn::isEmpty())
-    {
-        std::string item = StdIn::readString();
-        if (item != "-")
-            s.push(item);
-        else if (!s.isEmpty())
-        {
-            std::cout << s.pop() << " ";
-        }
-    }
-    std::cout << "(" << s.size() << " left on stack)" << std::endl;
-
-    for (auto it = s.begin(); it != s.end(); ++it)
-    {
-        std::cout << *it << std::endl;
-    }
-}
