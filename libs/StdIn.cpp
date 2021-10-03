@@ -1,5 +1,7 @@
 #include "StdIn.h"
 
+using namespace stdio;
+
 Scanner StdIn::scanner;
 
 bool StdIn::isEmpty()

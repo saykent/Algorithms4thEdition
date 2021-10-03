@@ -11,8 +11,9 @@ public:
     static std::string readString();
 
 private:
-    static Scanner scanner;
+    static stdio::Scanner scanner;
 };
+
 
 
 #endif //STDIN_H

@@ -2,26 +2,44 @@
 #define SCANNER_H
 #include <iostream>
 #include <regex>
+#include <utility>
+
+namespace stdio {
+
+class InputMismatchException : public std::exception
+{
+public:
+    explicit InputMismatchException(std::string message) : message_{std::move(message)} {}
+    std::string what() { return message_; }
+
+private:
+    std::string message_;
+};
 
 class Scanner
 {
 private:
-    const std::string WHITESPACE_PATTERN {"\\s+"};
+    const std::string WHITESPACE_PATTERN{"\\s+"};
 
 public:
     Scanner() : Scanner{std::cin}
     {}
 
-    Scanner(std::istream& in) : source_{in}, position_{0}, buffer_{}
+    Scanner(std::istream& in) : source_{in}, position_{0}, previousPosition_{0}, buffer_{}
     {
         delimPattern_ = std::regex{WHITESPACE_PATTERN};
         delimStartPattern_ = std::regex{"^" + WHITESPACE_PATTERN};
         findAnyPattern_ = std::regex{".*"};
+        integerPattern_ = std::regex {"[+-]?[[:digit:]]+"};
     }
 
     bool hasNext();
 
     std::string next();
+
+    std::string next(const std::regex& pattern);
+
+    int nextInt();
 
 private:
     void ensureOpen()
@@ -30,14 +48,34 @@ private:
             throw std::runtime_error("Scanner closed");
     }
 
+    /*
     void saveState()
     {
         savedScannerPosition_ = position_;
     }
+     */
+
+    void setPosition(long position)
+    {
+        previousPosition_ = position_;
+        position_ = position;
+    }
+
+    long getPosition()
+    {
+        return position_;
+    }
+
+    void setPositionToPreviousPosition()
+    {
+        position_ = previousPosition_;
+    }
 
     bool hasTokenInBuffer();
+
     std::string getCompleteTokenInBuffer(const std::regex& pattern);
 
+    /*
     bool revertState(bool boolResult)
     {
         position_ = savedScannerPosition_;
@@ -45,24 +83,31 @@ private:
         skipped_ = false;
         return boolResult;
     }
+     */
 
     void readInput();
 
+    std::regex& integerPattern()
+    {
+        return integerPattern_;
+    }
+
     bool makeSpace()
     {
-        long offset = savedScannerPosition_ == -1 ? position_ : savedScannerPosition_;
+        long offset = position_;
         buffer_.erase(buffer_.begin(), buffer_.begin() + offset);
-        translateSavedIndexes(offset);
         position_ -= offset;
 
         return true;
     }
 
+    /*
     void translateSavedIndexes(long offset)
     {
         if (savedScannerPosition_ != -1)
             savedScannerPosition_ -= offset;
     }
+     */
 
     void appendTokenDelimiterToBuffer()
     {
@@ -79,13 +124,15 @@ private:
     std::regex delimPattern_;
     std::regex delimStartPattern_;
     std::regex findAnyPattern_;
+    std::regex integerPattern_;
 
     long position_;
-    long savedScannerPosition_;
-    bool skipped_;
+    long previousPosition_;
+    //long savedScannerPosition_;
+    //bool skipped_;
 
     const std::string tokenDelimiter_{" "};
 };
-
+}
 
 #endif //SCANNER_H
