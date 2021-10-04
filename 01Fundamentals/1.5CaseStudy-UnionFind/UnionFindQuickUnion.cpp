@@ -8,6 +8,7 @@ public:
     {
         for (int i = 0; i < N; ++i)
             id_[i] = i;
+        accessCount_ = 0;
     }
     ~UnionFind() { delete[] id_; }
 
@@ -20,7 +21,13 @@ public:
     int find(int p)
     {
         //Find the root
-        while (p != id_[p]) p = id_[p];
+        accessCount_++;
+        while (p != id_[p])
+        {
+            accessCount_++;
+            p = id_[p];
+            accessCount_++;
+        }
         return p;
     }
 
@@ -35,10 +42,42 @@ public:
         count_--;
     }
 
+    void printContent()
+    {
+        std::cout << "Content: ";
+        for (int i = 0; i < idLength_; ++i)
+        {
+            std::cout << id_[i] << " ";
+        }
+        std::cout << std::endl;
+
+        std::cout << "accessCount : " << accessCount_ << std::endl;
+    }
+
+    int maxDepth()
+    {
+        int max = 0;
+        for (int i = 0; i < idLength_; ++i)
+        {
+            int depth = 1;
+            int p = i;
+            while (p != id_[p])
+            {
+                p = id_[p];
+                depth++;
+            }
+            if (depth > max)
+                max = depth;
+        }
+
+        return max;
+    }
+
 private:
     int* id_;
     int count_;
     int idLength_;
+    int accessCount_;
 };
 
 int main()
@@ -58,4 +97,6 @@ int main()
     }
 
     std::cout << uf.count() << " components" << std::endl;
+    uf.printContent();
+    std::cout << "Max depth : " << uf.maxDepth() << std::endl;
 }

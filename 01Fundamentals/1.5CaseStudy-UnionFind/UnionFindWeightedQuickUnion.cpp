@@ -10,6 +10,7 @@ public:
             id_[i] = i;
         for (int i = 0; i < N; ++i)
             size_[i] = 1;
+        accessCount_ = 0;
     }
     ~UnionFind()
     {
@@ -26,7 +27,14 @@ public:
     int find(int p)
     {
         //Find the root
-        while (p != id_[p]) p = id_[p];
+        accessCount_++;
+        while (p != id_[p])
+        {
+            accessCount_++;
+            p = id_[p];
+            accessCount_++;
+        }
+
         return p;
     }
 
@@ -36,13 +44,16 @@ public:
         int qRoot = find(q);
         if (pRoot == qRoot) return;
 
+        accessCount_ += 2;
         if (size_[pRoot] < size_[qRoot])
         {
+            accessCount_ += 3;
             id_[pRoot] = qRoot;
             size_[qRoot] += size_[pRoot];
         }
         else
         {
+            accessCount_ += 3;
             id_[qRoot] = pRoot;
             size_[pRoot] += size_[qRoot];
         }
@@ -50,11 +61,46 @@ public:
         count_--;
     }
 
+    void printContent()
+    {
+        std::cout << "Content: ";
+        for (int i = 0; i < idLength_; ++i)
+            std::cout << id_[i] << " ";
+        std::cout << std::endl;
+
+        std::cout << "Size: ";
+        for (int i = 0; i < idLength_; ++i)
+            std::cout << size_[i] << " ";
+        std::cout << std::endl;
+
+        std::cout << "accessCount : " << accessCount_ << std::endl;
+    }
+
+    int maxDepth()
+    {
+        int max = 0;
+        for (int i = 0; i < idLength_; ++i)
+        {
+            int depth = 1;
+            int p = i;
+            while (p != id_[p])
+            {
+                p = id_[p];
+                depth++;
+            }
+            if (depth > max)
+                max = depth;
+        }
+
+        return max;
+    }
+
 private:
     int* id_;
     int* size_;
     int count_;
     int idLength_;
+    int accessCount_;
 };
 
 int main()
@@ -74,4 +120,6 @@ int main()
     }
 
     std::cout << uf.count() << " components" << std::endl;
+    uf.printContent();
+    std::cout << "Max depth : " << uf.maxDepth() << std::endl;
 }

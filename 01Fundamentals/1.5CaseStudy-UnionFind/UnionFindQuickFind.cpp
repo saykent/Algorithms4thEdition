@@ -8,6 +8,7 @@ public:
     {
         for (int i = 0; i < N; ++i)
             id_[i] = i;
+        accessCount_ = 0;
     }
     ~UnionFind() { delete[] id_; }
 
@@ -17,7 +18,11 @@ public:
         return find(p) == find(q);
     }
 
-    int find(int p) { return id_[p]; }
+    int find(int p)
+    {
+        accessCount_++;
+        return id_[p];
+    }
     void join(int p, int q)
     {
         int pId = find(p);
@@ -26,15 +31,36 @@ public:
         if (pId == qId) return;
 
         for (int i = 0; i < idLength_; ++i)
-            if (id_[i] == pId) id_[i] = qId;
+        {
+            accessCount_++;
+            if (id_[i] == pId)
+            {
+                accessCount_++;
+                id_[i] = qId;
+            }
+        }
 
         count_--;
+    }
+
+    void printContent()
+    {
+        std::cout << "Content: ";
+        for (int i = 0; i < idLength_; ++i)
+        {
+            std::cout << id_[i] << " ";
+        }
+        std::cout << std::endl;
+
+        std::cout << "accessCount : " << accessCount_ << std::endl;
+
     }
 
 private:
     int* id_;
     int count_;
     int idLength_;
+    int accessCount_;
 };
 
 int main()
@@ -54,4 +80,6 @@ int main()
     }
 
     std::cout << uf.count() << " components" << std::endl;
+
+    uf.printContent();
 }
