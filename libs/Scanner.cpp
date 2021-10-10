@@ -74,28 +74,22 @@ void Scanner::readInput()
 
     makeSpace();
 
-    char delimiter = '\n';
-    std::string buf(maxSize, '\0');
-    if (source_.get(&buf[0], maxSize, delimiter))
+    while (true)
     {
-        std::streamsize readSize = source_.gcount();
-        if (readSize < maxSize - 1)
+        std::string buf(maxSize, '\0');
+        if (source_.getline(&buf[0], maxSize))
         {
-            buf.resize(source_.gcount());
+            buf.resize(source_.gcount() - 1); // remove  '\0'
             buffer_ += buf;
+
+            appendTokenDelimiterToBuffer();
         }
-        else
+
+        if (source_.eof())
         {
-            throw std::runtime_error("Read maxSize: There might be truncated characters.");
+            sourceClosed_ = true;
+            break;
         }
-        source_.ignore(1, delimiter);
-
-        appendTokenDelimiterToBuffer();
-    }
-
-    if (source_.eof())
-    {
-        sourceClosed_ = true;
     }
 }
 

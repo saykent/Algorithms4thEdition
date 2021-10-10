@@ -1,6 +1,8 @@
 #ifndef IN_H
 #define IN_H
 
+#include <regex>
+#include <string>
 #include <sstream>
 #include <vector>
 #include "Scanner.h"
@@ -54,7 +56,8 @@ public:
 
     std::vector<std::string> readAllStrings()
     {
-        std::vector<std::string> tokens = split(readAll(), ' ');
+        std::vector<std::string> tokens = split(readAll());
+        //std::vector<std::string> tokens = split(readAll(), ' ');
 
         return tokens;
     }
@@ -77,6 +80,17 @@ private:
         split(s, delim, std::back_inserter(elems));
 
         return elems;
+    }
+
+    std::vector<std::string> split(const std::string& s)
+    {
+        std::regex pattern{"\\s+|\r\n|[\r\n]"};
+        return split(s, pattern);
+    }
+
+    std::vector<std::string> split(const std::string& str, const std::regex& pattern)
+    {
+        return std::vector<std::string> {std::sregex_token_iterator(str.begin(), str.end(), pattern, -1), std::sregex_token_iterator()};
     }
 
 
