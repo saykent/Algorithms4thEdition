@@ -7,3 +7,4 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_subdirectory(libs)
 add_subdirectory(01Fundamentals)
+add_subdirectory(02Sorting)
