@@ -18,12 +18,33 @@ bool Scanner::hasNext()
     //return revertState(result);
 }
 
+bool Scanner::hasNextLine()
+{
+    ensureOpen();
+
+    while (!sourceClosed_)
+    {
+        if (hasPatternInBuffer(linePattern_))
+            return true;
+
+        readInput();
+    }
+
+    bool result = hasPatternInBuffer(linePattern_);
+    return result;
+}
+
 bool Scanner::hasTokenInBuffer()
+{
+    return hasTokenInBuffer(delimStartPattern_);
+}
+
+bool Scanner::hasTokenInBuffer(const std::regex& pattern)
 {
     long searchStartPosition = position_;
 
     std::smatch matches;
-    if (std::regex_search(buffer_.cbegin() + searchStartPosition, buffer_.cend(), matches, delimStartPattern_))
+    if (std::regex_search(buffer_.cbegin() + searchStartPosition, buffer_.cend(), matches, pattern))
     {
         searchStartPosition += (matches.position(0) + matches.length());
     }
@@ -32,6 +53,19 @@ bool Scanner::hasTokenInBuffer()
         return false;
 
     return true;
+}
+
+bool Scanner::hasPatternInBuffer(const std::regex& pattern)
+{
+    long searchStartPosition = position_;
+
+    std::smatch matches;
+    if (std::regex_search(buffer_.cbegin() + searchStartPosition, buffer_.cend(), matches, pattern))
+    {
+        return true;
+    }
+
+    return false;
 }
 
 void Scanner::readInput()
@@ -97,6 +131,11 @@ std::string Scanner::next(const std::regex& pattern)
     }
 }
 
+std::string Scanner::nextAll()
+{
+    return findPatternInBuffer(findAnyPattern_, 0);
+}
+
 int Scanner::nextInt()
 {
     try
@@ -120,6 +159,22 @@ int Scanner::nextInt()
         setPositionToPreviousPosition();
         throw std::runtime_error("Exception : Unknown");
     }
+}
+
+std::string Scanner::findWithinHorizon(const std::regex& pattern, long horizon)
+{
+    while (true)
+    {
+        std::string token = findWithinHorizon(pattern, horizon);
+        if (!token.empty())
+            return token;
+
+        if (!sourceClosed_)
+            readInput();
+        else
+            break;
+    }
+    return std::string{};
 }
 
 std::string Scanner::getCompleteTokenInBuffer(const std::regex& pattern)
@@ -154,6 +209,28 @@ std::string Scanner::getCompleteTokenInBuffer(const std::regex& pattern)
     }
 
     throw InputMismatchException("Failed to find the pattern.");
+}
+
+std::string Scanner::findPatternInBuffer(const std::regex& pattern, long horizon)
+{
+    auto searchLimit = buffer_.cend();
+    if (horizon > 0)
+    {
+        long horizonMax = buffer_.cend() - (buffer_.cbegin() + position_);
+        if (horizon < horizonMax)
+            searchLimit = buffer_.cbegin() + position_ + horizon;
+    }
+
+    std::smatch matches;
+    if (std::regex_search(buffer_.cbegin() + position_, searchLimit, matches, pattern))
+    {
+        long position = position_ + matches.position(0) + matches.length(0);
+        setPosition(position);
+
+        return matches[0].str();
+    }
+
+    return "";
 }
 
 }

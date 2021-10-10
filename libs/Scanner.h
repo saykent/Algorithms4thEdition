@@ -20,40 +20,36 @@ class Scanner
 {
 private:
     const std::string WHITESPACE_PATTERN{"\\s+"};
+    const std::string LINE_SEPARATOR_PATTERN{"\r\n|[\r\n]"};
+    const std::string LINE_PATTERN{".*" + LINE_SEPARATOR_PATTERN + "|.+$"};
 
 public:
     Scanner() : Scanner{std::cin}
     {}
 
-    Scanner(std::istream& in) : source_{in}, position_{0}, previousPosition_{0}, buffer_{}
+    Scanner(std::istream& in) : source_{in}, position_{0}, previousPosition_{0}, closed_{false}, sourceClosed_{false},
+                                buffer_{}
     {
         delimPattern_ = std::regex{WHITESPACE_PATTERN};
         delimStartPattern_ = std::regex{"^" + WHITESPACE_PATTERN};
         findAnyPattern_ = std::regex{".*"};
         integerPattern_ = std::regex {"[+-]?[[:digit:]]+"};
+        linePattern_ = std::regex{LINE_PATTERN};
     }
 
     bool hasNext();
-
+    bool hasNextLine();
     std::string next();
-
     std::string next(const std::regex& pattern);
-
+    std::string nextAll();
     int nextInt();
-
+    std::string findWithinHorizon(const std::regex& pattern, long horizon);
 private:
     void ensureOpen()
     {
         if (closed_)
             throw std::runtime_error("Scanner closed");
     }
-
-    /*
-    void saveState()
-    {
-        savedScannerPosition_ = position_;
-    }
-     */
 
     void setPosition(long position)
     {
@@ -72,24 +68,22 @@ private:
     }
 
     bool hasTokenInBuffer();
+    bool hasTokenInBuffer(const std::regex& pattern);
+    bool hasPatternInBuffer(const std::regex& pattern);
 
     std::string getCompleteTokenInBuffer(const std::regex& pattern);
-
-    /*
-    bool revertState(bool boolResult)
-    {
-        position_ = savedScannerPosition_;
-        savedScannerPosition_ = -1;
-        skipped_ = false;
-        return boolResult;
-    }
-     */
+    std::string findPatternInBuffer(const std::regex& pattern, long horizon);
 
     void readInput();
 
     std::regex& integerPattern()
     {
         return integerPattern_;
+    }
+
+    std::regex& linePattern()
+    {
+        return linePattern_;
     }
 
     bool makeSpace()
@@ -101,20 +95,12 @@ private:
         return true;
     }
 
-    /*
-    void translateSavedIndexes(long offset)
-    {
-        if (savedScannerPosition_ != -1)
-            savedScannerPosition_ -= offset;
-    }
-     */
-
     void appendTokenDelimiterToBuffer()
     {
         buffer_ += tokenDelimiter_;
     }
 
-
+private:
     std::string buffer_;
     std::istream& source_;
 
@@ -125,6 +111,7 @@ private:
     std::regex delimStartPattern_;
     std::regex findAnyPattern_;
     std::regex integerPattern_;
+    std::regex linePattern_;
 
     long position_;
     long previousPosition_;
