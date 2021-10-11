@@ -2,14 +2,14 @@
 #include <vector>
 
 #include "In.h"
-#include "Selection.h"
+#include "Insertion.h"
 
 int main()
 {
-    Selection<std::string> sorter;
     stdio::In in;
     std::vector<std::string> a = in.readAllStrings();
 
+    Insertion<std::string> sorter;
     sorter.show(a);
     sorter.sort(a);
     if (sorter.isSorted(a))
