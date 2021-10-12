@@ -2,9 +2,10 @@
 #include <vector>
 #include <random>
 
-#include "Stopwatch.h"
-#include "Insertion.h"
-#include "Selection.h"
+#include "2.1ElementarySorts/Stopwatch.h"
+#include "2.1ElementarySorts/Insertion.h"
+#include "2.1ElementarySorts/Selection.h"
+#include "2.1ElementarySorts/Shell.h"
 
 class SortCompare
 {
@@ -13,10 +14,12 @@ public:
     {
         Insertion<double> insertion;
         Selection<double> selection;
+        Shell<double> shell;
 
         Stopwatch timer;
         if      (alg == "Insertion")    insertion.sort(a);
         else if (alg == "Selection")    selection.sort(a);
+        else if (alg == "Shell")        shell.sort(a);
 
         return timer.elapsedTime();
     }

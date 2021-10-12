@@ -2,7 +2,7 @@
 #include <vector>
 
 #include "In.h"
-#include "SortBase.h"
+#include "../SortBase.h"
 
 template<typename T>
 class Selection : public SortBase<T>
