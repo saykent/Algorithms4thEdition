@@ -6,6 +6,7 @@
 #include "2.1ElementarySorts/Insertion.h"
 #include "2.1ElementarySorts/Selection.h"
 #include "2.1ElementarySorts/Shell.h"
+#include "2.2Mergesort/Merge.h"
 
 class SortCompare
 {
@@ -15,11 +16,13 @@ public:
         Insertion<double> insertion;
         Selection<double> selection;
         Shell<double> shell;
+        Merge<double> merge;
 
         Stopwatch timer;
         if      (alg == "Insertion")    insertion.sort(a);
         else if (alg == "Selection")    selection.sort(a);
         else if (alg == "Shell")        shell.sort(a);
+        else if (alg == "Merge")        merge.sort(a);
 
         return timer.elapsedTime();
     }
