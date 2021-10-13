@@ -7,6 +7,7 @@
 #include "2.1ElementarySorts/Selection.h"
 #include "2.1ElementarySorts/Shell.h"
 #include "2.2Mergesort/Merge.h"
+#include "2.2Mergesort/MergeBU.h"
 
 class SortCompare
 {
@@ -17,12 +18,14 @@ public:
         Selection<double> selection;
         Shell<double> shell;
         Merge<double> merge;
+        MergeBU<double> mergeBU;
 
         Stopwatch timer;
-        if      (alg == "Insertion")    insertion.sort(a);
-        else if (alg == "Selection")    selection.sort(a);
+        if      (alg == "Selection")    selection.sort(a);
+        else if (alg == "Insertion")    insertion.sort(a);
         else if (alg == "Shell")        shell.sort(a);
         else if (alg == "Merge")        merge.sort(a);
+        else if (alg == "MergeBU")      mergeBU.sort(a);
 
         return timer.elapsedTime();
     }
