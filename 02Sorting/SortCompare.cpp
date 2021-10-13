@@ -8,6 +8,7 @@
 #include "2.1ElementarySorts/Shell.h"
 #include "2.2Mergesort/Merge.h"
 #include "2.2Mergesort/MergeBU.h"
+#include "2.3QuickSort/Quick.h"
 
 class SortCompare
 {
@@ -19,6 +20,7 @@ public:
         Shell<double> shell;
         Merge<double> merge;
         MergeBU<double> mergeBU;
+        Quick<double> quick;
 
         Stopwatch timer;
         if      (alg == "Selection")    selection.sort(a);
@@ -26,6 +28,7 @@ public:
         else if (alg == "Shell")        shell.sort(a);
         else if (alg == "Merge")        merge.sort(a);
         else if (alg == "MergeBU")      mergeBU.sort(a);
+        else if (alg == "Quick")        quick.sort(a);
 
         return timer.elapsedTime();
     }

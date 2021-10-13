@@ -1,9 +1,9 @@
-#include "MergeBU.h"
+#include "Quick.h"
 #include "In.h"
 
 int main()
 {
-    MergeBU<std::string> sorter;
+    Quick<std::string> sorter;
     stdio::In in;
     std::vector<std::string> a = in.readAllStrings();
 
