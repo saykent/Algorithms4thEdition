@@ -81,14 +81,16 @@ void Scanner::readInput()
         {
             buf.resize(source_.gcount() - 1); // remove  '\0'
             buffer_ += buf;
-
-            appendTokenDelimiterToBuffer();
         }
 
         if (source_.eof())
         {
             sourceClosed_ = true;
             break;
+        }
+        else
+        {
+           buffer_ += "\n";
         }
     }
 }
@@ -137,6 +139,30 @@ int Scanner::nextInt()
         std::string s = next(integerPattern_);
         int value = std::stoi(s);
         return value;
+    }
+    catch (std::out_of_range& e)
+    {
+        setPositionToPreviousPosition();
+        throw std::runtime_error("Exception : " + std::string(e.what()));
+    }
+    catch (std::invalid_argument& e)
+    {
+        setPositionToPreviousPosition();
+        throw std::runtime_error("Exception : " + std::string(e.what()));
+    }
+    catch (...)
+    {
+        setPositionToPreviousPosition();
+        throw std::runtime_error("Exception : Unknown");
+    }
+}
+
+std::string Scanner::nextLine()
+{
+    try
+    {
+        std::string s = findPatternInBuffer(linePattern_, 0);
+        return s;
     }
     catch (std::out_of_range& e)
     {

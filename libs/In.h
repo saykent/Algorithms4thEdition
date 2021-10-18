@@ -28,6 +28,11 @@ public:
         return !scanner->hasNext();
     }
 
+    bool hasNextLine()
+    {
+        return scanner->hasNextLine();
+    }
+
     std::string readString()
     {
         return scanner->next();
@@ -38,6 +43,19 @@ public:
         try
         {
             return scanner->nextInt();
+        }
+        catch (...)
+        {
+            std::string token = scanner->next();
+            throw std::runtime_error("Cannot get integer value. The token was " + token);
+        }
+    }
+
+    std::string readLine()
+    {
+        try
+        {
+            return scanner->nextLine();
         }
         catch (...)
         {

@@ -21,7 +21,7 @@ class Scanner
 private:
     const std::string WHITESPACE_PATTERN{"\\s+"};
     const std::string LINE_SEPARATOR_PATTERN{"\r\n|[\r\n]"};
-    const std::string LINE_PATTERN{".*" + LINE_SEPARATOR_PATTERN + "|.+$"};
+    const std::string LINE_PATTERN{".*(" + LINE_SEPARATOR_PATTERN + ")|.+$"};
 
 public:
     Scanner() : Scanner{std::cin}
@@ -43,6 +43,7 @@ public:
     std::string next(const std::regex& pattern);
     std::string nextAll();
     int nextInt();
+    std::string nextLine();
     std::string findWithinHorizon(const std::regex& pattern, long horizon);
 private:
     void ensureOpen()
