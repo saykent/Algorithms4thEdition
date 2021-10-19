@@ -34,7 +34,7 @@ public:
 private:
     void swim(int k)
     {
-        while (k > 1 && less(k/2, k))
+        while (k > 1 && greater(k/2, k))
         {
             exch(k / 2, k);
             k = k / 2;
@@ -47,8 +47,8 @@ private:
         while (2*k <= N)
         {
             int j = 2*k;
-            if (j < N && less(j, j + 1)) ++j;
-            if (!less(k, j)) break;
+            if (j < N && greater(j, j + 1)) ++j;
+            if (!greater(k, j)) break;
             exch(k, j);
             k = j;
         }
@@ -59,7 +59,7 @@ private:
         std::swap(pq[i], pq[j]);
     }
 
-    bool less(int i, int j)
+    bool greater(int i, int j)
     {
         return pq[j] < pq[i];
     }

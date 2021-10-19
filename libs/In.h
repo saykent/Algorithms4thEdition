@@ -4,7 +4,9 @@
 #include <regex>
 #include <string>
 #include <sstream>
+#include <fstream>
 #include <vector>
+
 #include "Scanner.h"
 
 namespace stdio
@@ -13,14 +15,19 @@ class In
 {
 public:
     In() : scanner{new Scanner()} {}
-    explicit In(std::string name)
+    explicit In(const std::string& name)
     {
-        scanner = new Scanner();
+        filestream_.open(name);
+        if (filestream_.is_open())
+            scanner = new Scanner(filestream_);
+        else
+            throw std::runtime_error("Failed to open the file.");
     }
 
     ~In()
     {
         delete scanner;
+        filestream_.close();
     }
 
     bool isEmpty()
@@ -114,6 +121,7 @@ private:
 
 private:
     Scanner* scanner;
+    std::ifstream filestream_;
 };
 }
 
