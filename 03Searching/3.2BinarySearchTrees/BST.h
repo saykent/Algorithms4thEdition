@@ -52,14 +52,6 @@ public:
     }
 
     Value& get(Key key) { return get(root, key); }
-    Value& get(NodePtr x, Key key)
-    {
-        if (x == nullptr) throw std::out_of_range("key doesn't exist.");
-
-        if      ( key < x->key) return get(x->left, key);
-        else if (key > x->key) return get(x->right, key);
-        else return x->val;
-    }
 
     void put(Key key, Value val)
     {
@@ -98,6 +90,15 @@ public:
     }
 
 private:
+    Value& get(NodePtr x, Key key)
+    {
+        if (x == nullptr) throw std::out_of_range("key doesn't exist.");
+
+        if      ( key < x->key) return get(x->left, key);
+        else if (key > x->key) return get(x->right, key);
+        else return x->val;
+    }
+
     NodePtr put (NodePtr x, Key key, Value val)
     {
         if (x == nullptr) return new Node(key, val, 1);
